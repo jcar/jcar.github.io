@@ -1,6 +1,6 @@
 {
   "owner": "jcar",
-  "generatedAt": "2026-10-11T15:28:03.591Z",
+  "generatedAt": "2026-10-11T15:35:24.746Z",
   "projects": [
     {
       "name": "alicorn-adventures",
@@ -55,20 +55,6 @@
       "language": "TypeScript",
       "private": false,
       "pushedAt": "2026-10-11T15:19:27Z"
-    },
-    {
-      "name": "chess-adventure-quest",
-      "title": "Chess Adventure Quest",
-      "description": "A kid-friendly browser-based chess learning game built with React and TypeScript",
-      "url": "https://jcar.github.io/chess-adventure-quest/",
-      "repoUrl": "https://github.com/jcar/chess-adventure-quest",
-      "topics": [
-        "game"
-      ],
-      "icon": null,
-      "language": "TypeScript",
-      "private": false,
-      "pushedAt": "2025-08-17T02:03:20Z"
     },
     {
       "name": "chess-club",
