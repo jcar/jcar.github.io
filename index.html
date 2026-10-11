@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Launchpad</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<meta name="theme-color" content="#E6EAE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141C1B" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #E6EAE4; --surface: #F3F5F1; --ink: #1B2826; --muted: #5B6A66; --line: #C7D0CA;
+    --focus: #2A6F97;
+    --sat: 52%; --light: 46%;
+    color-scheme: light dark;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141C1B; --surface: #1C2725; --ink: #E3EAE5; --muted: #93A39E; --line: #2C3A37;
+      --focus: #7DB9DB; --sat: 42%; --light: 40%;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141C1B; --surface: #1C2725; --ink: #E3EAE5; --muted: #93A39E; --line: #2C3A37;
+    --focus: #7DB9DB; --sat: 42%; --light: 40%;
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 1rem/1.5 "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 68rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+
+  header h1 {
+    font: 800 clamp(2.5rem, 7vw, 4.5rem)/0.95 "Bricolage Grotesque", system-ui, sans-serif;
+    letter-spacing: -0.035em; margin: 0 0 0.5rem;
+  }
+  .meta { color: var(--muted); margin: 0 0 2rem; }
+  .meta a { color: inherit; }
+
+  .search { position: relative; max-width: 34rem; }
+  .search input {
+    width: 100%; font: inherit; font-size: 1.125rem; color: var(--ink);
+    background: var(--surface); border: 2px solid var(--line); border-radius: 14px;
+    padding: 0.85rem 3rem 0.85rem 1rem;
+  }
+  .search input:focus { outline: none; border-color: var(--focus); }
+  .search kbd {
+    position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+    font: 700 0.85rem/1 "Atkinson Hyperlegible", sans-serif; color: var(--muted);
+    border: 1.5px solid var(--line); border-radius: 6px; padding: 0.2rem 0.45rem;
+  }
+  .hint { color: var(--muted); font-size: 0.875rem; margin: 0.5rem 0 0; min-height: 1.3em; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0 0; padding: 0; list-style: none; }
+  .chips button {
+    font: inherit; font-size: 0.9rem; color: var(--ink); background: transparent; cursor: pointer;
+    border: 1.5px solid var(--line); border-radius: 999px; padding: 0.3rem 0.85rem;
+  }
+  .chips button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  section { margin-top: 3rem; }
+  section h2 {
+    font: 500 1.375rem/1.2 "Bricolage Grotesque", system-ui, sans-serif; letter-spacing: -0.01em;
+    margin: 0 0 1.25rem; padding-bottom: 0.5rem; border-bottom: 1.5px solid var(--line);
+    display: flex; align-items: baseline; gap: 0.6rem;
+  }
+  section h2 small { font: 400 0.95rem "Atkinson Hyperlegible", sans-serif; color: var(--muted); }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: 2rem 1.5rem; list-style: none; margin: 0; padding: 0;
+  }
+  .app { position: relative; }
+  .app > a { display: block; color: inherit; text-decoration: none; border-radius: 18px; }
+  .app > a:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
+
+  /* Generated icon: hue, pattern and corner from the repo name. */
+  .icon {
+    --h: 200;
+    aspect-ratio: 1; border-radius: 22%;
+    display: grid; place-items: center; overflow: hidden;
+    background-color: hsl(var(--h) var(--sat) var(--light));
+    color: hsl(var(--h) 60% 96%);
+    font: 800 clamp(1.8rem, 4vw, 2.4rem)/1 "Bricolage Grotesque", system-ui, sans-serif;
+    letter-spacing: -0.04em;
+    transition: transform 160ms ease;
+  }
+  .icon.emoji { font-size: clamp(2.4rem, 6vw, 3.2rem); }
+  .icon.p1 { background-image: repeating-linear-gradient(135deg, hsl(var(--h) 60% 100% / .12) 0 10px, transparent 10px 22px); }
+  .icon.p2 { background-image: radial-gradient(hsl(var(--h) 60% 100% / .16) 2.5px, transparent 3px); background-size: 16px 16px; }
+  .icon.p3 { background-image: repeating-radial-gradient(circle at 100% 100%, hsl(var(--h) 60% 100% / .13) 0 8px, transparent 8px 20px); }
+  .icon.p4 { background-image: linear-gradient(hsl(var(--h) 60% 100% / .14) 0 0); background-size: 100% 38%; background-repeat: no-repeat; background-position: bottom; }
+  .icon.r1 { border-radius: 50%; }
+  .icon.r2 { border-radius: 22% 50% 22% 22%; }
+  .app > a:hover .icon { transform: translateY(-3px); }
+  .app > a:active .icon { transform: scale(0.97); }
+
+  .app h3 { font: 700 1rem/1.25 "Atkinson Hyperlegible", sans-serif; margin: 0.75rem 0 0.15rem; overflow-wrap: anywhere; }
+  .app p {
+    color: var(--muted); font-size: 0.875rem; line-height: 1.4; margin: 0;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .app .repo {
+    position: absolute; top: 0.4rem; right: 0.4rem; width: 2rem; height: 2rem;
+    display: grid; place-items: center; border-radius: 50%;
+    background: var(--surface); color: var(--ink); opacity: 0; transition: opacity 120ms;
+  }
+  .app:hover .repo, .app .repo:focus-visible { opacity: 1; }
+  .app .repo:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .app.first .icon { box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--focus); }
+  @media (hover: none) { .app .repo { opacity: 0.9; } .search kbd { display: none; } }
+  @media (max-width: 34rem) {
+    main { padding-top: 2rem; }
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem 1rem; }
+    .icon { font-size: 1.5rem; }
+    .icon.emoji { font-size: 2.2rem; }
+    .app h3 { font-size: 0.875rem; margin-top: 0.5rem; }
+    .app p { display: none; }
+    .app .repo { display: none; }
+  }
+
+  .empty { margin-top: 3rem; max-width: 36rem; }
+  .empty h2 { font: 500 1.5rem "Bricolage Grotesque", sans-serif; margin: 0 0 0.5rem; }
+  .empty code { background: var(--surface); padding: 0.1rem 0.35rem; border-radius: 5px; }
+
+  footer { margin-top: 4rem; color: var(--muted); font-size: 0.875rem; }
+  footer a { color: inherit; }
+
+  @media (prefers-reduced-motion: reduce) { .icon, .app .repo { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title">Launchpad</h1>
+    <p class="meta" id="meta">Loading projects…</p>
+    <div class="search">
+      <input id="q" type="search" placeholder="Find a project" aria-label="Find a project" autocomplete="off" spellcheck="false">
+      <kbd aria-hidden="true">/</kbd>
+    </div>
+    <p class="hint" id="hint" aria-live="polite"></p>
+    <ul class="chips" id="chips" aria-label="Filter by topic"></ul>
+  </header>
+  <div id="groups"></div>
+  <footer id="footer"></footer>
+</main>
+
+<script>
+(async () => {
+  const $ = (id) => document.getElementById(id);
+  const RECENT_KEY = "launchpad:recent";
+
+  let config = { title: "Launchpad", categories: [], otherLabel: "Everything else" };
+  let data;
+  try {
+    const [d, c] = await Promise.all([
+      fetch("projects.json", { cache: "no-cache" }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      fetch("launcher.config.json", { cache: "no-cache" }).then((r) => r.ok ? r.json() : {}).catch(() => ({})),
+    ]);
+    data = d; config = { ...config, ...c };
+  } catch {
+    $("meta").textContent = "";
+    $("groups").innerHTML = `<div class="empty"><h2>No project list yet</h2>
+      <p>Run the <strong>Build launcher</strong> workflow from this repo's Actions tab. It creates <code>projects.json</code> and this page fills in on the next load.</p></div>`;
+    $("q").disabled = true;
+    return;
+  }
+
+  document.title = config.title;
+  $("title").textContent = config.title;
+  const projects = data.projects;
+  const when = new Date(data.generatedAt).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  $("meta").innerHTML = `${projects.length} sites from <a href="https://github.com/${data.owner}">${data.owner}</a>. List refreshed ${when}.`;
+
+  // Deterministic look per project.
+  const hash = (s) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+  const monogram = (title) => {
+    const w = title.split(/\s+/).filter(Boolean);
+    return w.length > 1 ? (w[0][0] + w[1][0]).toUpperCase() : w[0][0].toUpperCase() + (w[0][1] || "").toLowerCase();
+  };
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  const readRecent = () => { try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch { return []; } };
+  const remember = (name) => {
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify([name, ...readRecent().filter((n) => n !== name)].slice(0, 6))); } catch {}
+  };
+
+  const tile = (p) => {
+    const h = hash(p.name);
+    const cls = `icon p${h % 5} r${(h >> 4) % 3}${p.icon ? " emoji" : ""}`;
+    return `<li class="app" data-name="${esc(p.name)}">
+      <a href="${esc(p.url)}" target="_blank" rel="noopener" data-launch="${esc(p.name)}">
+        <div class="${cls}" style="--h:${h % 360}" aria-hidden="true">${esc(p.icon || monogram(p.title))}</div>
+        <h3>${esc(p.title)}</h3>
+        ${p.description ? `<p>${esc(p.description)}</p>` : ""}
+      </a>
+      <a class="repo" href="${esc(p.repoUrl)}" target="_blank" rel="noopener" aria-label="Open ${esc(p.title)} repository" title="Repository">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+    </li>`;
+  };
+
+  // Topic chips: every topic in use, most common first.
+  const counts = {};
+  projects.forEach((p) => p.topics.forEach((t) => { counts[t] = (counts[t] || 0) + 1; }));
+  const topics = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b));
+  let activeTopic = null;
+  $("chips").innerHTML = topics.map((t) => `<li><button type="button" aria-pressed="false" data-topic="${esc(t)}">${esc(t)}</button></li>`).join("");
+  $("chips").addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    activeTopic = activeTopic === b.dataset.topic ? null : b.dataset.topic;
+    $("chips").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.topic === activeTopic)));
+    render();
+  });
+
+  const matches = (p, q) => !q || [p.title, p.name, p.description, ...p.topics].join(" ").toLowerCase().includes(q);
+
+  function render() {
+    const q = $("q").value.trim().toLowerCase();
+    const visible = projects.filter((p) => matches(p, q) && (!activeTopic || p.topics.includes(activeTopic)));
+    const groups = [];
+
+    if (!q && !activeTopic) {
+      const recent = readRecent().map((n) => projects.find((p) => p.name === n)).filter(Boolean);
+      if (recent.length) groups.push(["Recent", recent]);
+    }
+    const placed = new Set();
+    for (const { topic, label } of config.categories || []) {
+      const items = visible.filter((p) => !placed.has(p.name) && p.topics.includes(topic));
+      items.forEach((p) => placed.add(p.name));
+      if (items.length) groups.push([label, items]);
+    }
+    const rest = visible.filter((p) => !placed.has(p.name));
+    if (rest.length) groups.push([groups.some(([l]) => l !== "Recent") ? config.otherLabel : "All projects", rest]);
+
+    $("groups").innerHTML = visible.length
+      ? groups.map(([label, items]) => `<section><h2>${esc(label)} <small>${items.length}</small></h2><ul class="grid">${items.map(tile).join("")}</ul></section>`).join("")
+      : `<div class="empty"><h2>Nothing matches “${esc($("q").value)}”</h2><p>Try a shorter search or clear the topic filter.</p></div>`;
+
+    // Enter launches the first match while searching.
+    const first = q && document.querySelector("#groups .app");
+    if (first) first.classList.add("first");
+    $("hint").textContent = first ? `Press Enter to open ${first.querySelector("h3").textContent}` : "";
+  }
+
+  $("q").addEventListener("input", render);
+  $("q").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { const a = document.querySelector("#groups .app.first > a"); if (a) { remember(a.dataset.launch); window.open(a.href, "_blank", "noopener"); } }
+    if (e.key === "Escape") { $("q").value = ""; render(); }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && document.activeElement !== $("q")) { e.preventDefault(); $("q").focus(); }
+  });
+  $("groups").addEventListener("click", (e) => { const a = e.target.closest("a[data-launch]"); if (a) remember(a.dataset.launch); });
+  window.addEventListener("focus", () => { if (!$("q").value) render(); });
+
+  $("footer").innerHTML = `Tag a repo with a topic to group it. Add <code>launcher-hide</code> to leave it off this page.`;
+  render();
+})();
+</script>
+</body>
+</html>

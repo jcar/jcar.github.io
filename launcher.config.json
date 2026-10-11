@@ -1,0 +1,13 @@
+{
+  "title": "Launchpad",
+  "categories": [
+    { "topic": "tool", "label": "Tools" },
+    { "topic": "game", "label": "Games" }
+  ],
+  "otherLabel": "Everything else",
+  "exclude": [],
+  "includeForks": false,
+  "includeArchived": false,
+  "titles": {},
+  "icons": {}
+}
