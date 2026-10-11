@@ -95,6 +95,8 @@
     transition: transform 160ms ease;
   }
   .icon.emoji { font-size: clamp(2.4rem, 6vw, 3.2rem); }
+  .icon.img { background: none; }
+  .icon.img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .icon.p1 { background-image: repeating-linear-gradient(135deg, hsl(var(--h) 60% 100% / .12) 0 10px, transparent 10px 22px); }
   .icon.p2 { background-image: radial-gradient(hsl(var(--h) 60% 100% / .16) 2.5px, transparent 3px); background-size: 16px 16px; }
   .icon.p3 { background-image: repeating-radial-gradient(circle at 100% 100%, hsl(var(--h) 60% 100% / .13) 0 8px, transparent 8px 20px); }
@@ -194,12 +196,16 @@
     try { localStorage.setItem(RECENT_KEY, JSON.stringify([name, ...readRecent().filter((n) => n !== name)].slice(0, 6))); } catch {}
   };
 
+  // An icon is an image path (icons/foo.webp), an emoji, or absent (monogram).
+  const isImage = (icon) => /\.(png|svg|webp|jpe?g|gif|avif)$/i.test(icon || "");
   const tile = (p) => {
     const h = hash(p.name);
-    const cls = `icon p${h % 5} r${(h >> 4) % 3}${p.icon ? " emoji" : ""}`;
+    const art = isImage(p.icon)
+      ? `<div class="icon img" aria-hidden="true"><img src="${esc(p.icon)}" alt="" loading="lazy" decoding="async"></div>`
+      : `<div class="icon p${h % 5} r${(h >> 4) % 3}${p.icon ? " emoji" : ""}" style="--h:${h % 360}" aria-hidden="true">${esc(p.icon || monogram(p.title))}</div>`;
     return `<li class="app" data-name="${esc(p.name)}">
       <a href="${esc(p.url)}" target="_blank" rel="noopener" data-launch="${esc(p.name)}">
-        <div class="${cls}" style="--h:${h % 360}" aria-hidden="true">${esc(p.icon || monogram(p.title))}</div>
+        ${art}
         <h3>${esc(p.title)}</h3>
         ${p.description ? `<p>${esc(p.description)}</p>` : ""}
       </a>

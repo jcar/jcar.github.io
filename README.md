@@ -26,6 +26,7 @@ scripts/build-projects.mjs ──► projects.json ──► index.html (the pag
 |---|---|---|
 | `index.html` | The page itself | Rarely |
 | `launcher.config.json` | Display names, icons, groups, exclusions | Yes, this is the control panel |
+| `icons/` | App icons shown on the cards (256px WebP or SVG) | When an app's icon changes |
 | `projects.json` | Generated list of projects | No, the Action overwrites it |
 | `scripts/build-projects.mjs` | Builds `projects.json` from the GitHub API | Rarely |
 | `.github/workflows/build-launcher.yml` | Runs the script nightly and on demand | Rarely |
@@ -89,11 +90,13 @@ gh workflow run build-launcher.yml -R jcar/jcar.github.io
 | `categories` | Groups and their order | As soon as Pages redeploys |
 | `otherLabel` | Name of the catch-all group | As soon as Pages redeploys |
 | `titles` | Display names, e.g. `"muthur-terminal": "MU-TH-UR 6000"`. Otherwise the repo name is title-cased. | After the list rebuilds |
-| `icons` | Emoji per repo, e.g. `"chess-openings": "♟️"`. Otherwise it gets a generated monogram tile. | After the list rebuilds |
+| `icons` | Per repo: an image in this repo's `icons/` folder (`"black-bass": "icons/black-bass.webp"`) or an emoji (`"pwf-analysis": "🐟"`). Otherwise it gets a generated monogram tile. | After the list rebuilds |
 | `exclude` | Repo names to leave off (same as `launcher-hide`, but kept here) | After the list rebuilds |
 | `includeForks` / `includeArchived` | Show forked or archived repos | After the list rebuilds |
 
 Pushing a change to `launcher.config.json` rebuilds the list automatically, so in practice every change shows up within a couple of minutes.
+
+**Icons.** Images are copied into `icons/` instead of linked from each app's site, so they load fast and don't break when an app moves its files. Use the app's own icon, usually the 512px one in its web manifest. Save it as a 256px WebP named after the repo, and point `icons` at it. If an app changes its icon, the launcher keeps the old copy until it's replaced here.
 
 **Custom domains.** The script picks up custom domains from each repo's Pages settings (that's how `chess-trainer` links to chesshall.app). If one doesn't come through, set the repo's **About → Website** field and the launcher will use that.
 

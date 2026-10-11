@@ -9,5 +9,20 @@
   "includeForks": false,
   "includeArchived": false,
   "titles": {},
-  "icons": {}
+  "icons": {
+    "alicorn-adventures": "icons/alicorn-adventures.webp",
+    "black-bass": "icons/black-bass.webp",
+    "blue-marlin": "icons/blue-marlin.webp",
+    "chess-club": "icons/chess-club.svg",
+    "chess-openings": "icons/chess-openings.svg",
+    "chess-trainer": "icons/chess-trainer.svg",
+    "dragon-school": "icons/dragon-school.webp",
+    "wasteland-racers": "icons/wasteland-racers.webp",
+    "bass": "🎣",
+    "dove-forecaster": "🕊️",
+    "hockey-shot-map": "🏒",
+    "muthur-terminal": "👽",
+    "pwf-analysis": "🐟",
+    "slidev-example": "🎞️"
+  }
 }
