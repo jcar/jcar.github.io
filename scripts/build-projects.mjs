@@ -5,6 +5,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const owner = process.env.OWNER;
 const token = process.env.LAUNCHER_TOKEN || process.env.GITHUB_TOKEN || "";
 const usePat = Boolean(process.env.LAUNCHER_TOKEN);
+const useApp = usePat && process.env.LAUNCHER_TOKEN_KIND === "app";
 if (!owner) throw new Error("OWNER is not set.");
 
 const config = JSON.parse(await readFile(new URL("../launcher.config.json", import.meta.url), "utf8"));
@@ -24,14 +25,18 @@ async function gh(path) {
   return res.json();
 }
 
-// With a personal token we can see private repos too; otherwise public only.
-const listPath = usePat
+// A GitHub App token or personal token can see private repos too; otherwise public only.
+// App installation tokens can't call /user/repos, so they list the repos the App is installed on.
+const listPath = useApp
+  ? "/installation/repositories?per_page=100"
+  : usePat
   ? "/user/repos?affiliation=owner&visibility=all&per_page=100"
   : `/users/${owner}/repos?type=owner&per_page=100`;
 
 const repos = [];
 for (let page = 1; ; page++) {
-  const batch = await gh(`${listPath}&page=${page}`);
+  const res = await gh(`${listPath}&page=${page}`);
+  const batch = useApp ? res?.repositories : res;
   if (!batch || batch.length === 0) break;
   repos.push(...batch);
   if (batch.length < 100) break;

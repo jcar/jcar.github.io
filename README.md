@@ -130,7 +130,7 @@ These are set once and should stay as they are:
 
 **A project isn't showing up.** Check, in order:
 1. Pages is turned on in that repo (`has_pages` is what the script looks for).
-2. The repo is public. Private repos need the token below.
+2. If the repo is private, the launcher's GitHub App or token can see it (see [Private repos](#private-repos)).
 3. It isn't tagged `launcher-hide`, listed in `exclude`, a fork, or archived.
 4. The list has rebuilt since the change. Run the workflow manually.
 
@@ -149,13 +149,33 @@ gh api -X PUT repos/jcar/jcar.github.io/actions/permissions/workflow -f default_
 
 My project repos are private, but their Pages sites are public. That takes **GitHub Pro**: on the free plan, making a repo private takes its site down.
 
-The default Actions token only sees public repos, so the launcher reads them with a fine-grained token saved as the Actions secret `LAUNCHER_TOKEN`:
+The default Actions token only sees public repos. To see the private ones, the workflow uses a token from a **GitHub App** I own. The App gives each run a fresh one-hour token, so nothing expires and there's nothing to renew.
 
-- **Resource owner:** jcar. **Repository access:** All repositories.
-- **Permissions:** Pages: Read-only (Metadata: Read-only is added automatically).
-- Save it with `gh secret set LAUNCHER_TOKEN -R jcar/jcar.github.io` and paste the token when prompted.
+| Setting | Where | Holds |
+|---|---|---|
+| `LAUNCHER_APP_ID` | Actions **variable** | The App's ID (not secret) |
+| `LAUNCHER_APP_KEY` | Actions **secret** | The App's private key (`.pem`) |
+| `LAUNCHER_TOKEN` | Actions **secret** | Fallback personal token, used only if `LAUNCHER_APP_ID` isn't set |
 
-**When the token expires,** Build launcher fails with a 401. The site stays up with the last list, but new projects won't appear. Make a new token and save it over the old secret.
+**Setting up the App (one time):**
+
+1. Go to github.com/settings/apps/new.
+   - **Name:** anything unique, e.g. `jcar-launchpad`. **Homepage URL:** `https://jcar.github.io`.
+   - **Webhook:** uncheck **Active**.
+   - **Repository permissions:** Pages: Read-only (Metadata: Read-only is added automatically).
+   - **Where can this be installed:** Only on this account.
+2. After creating it, note the **App ID** at the top of the page, then click **Generate a private key**. A `.pem` file downloads.
+3. Click **Install App** in the sidebar → install on `jcar` → **All repositories**. New repos are covered automatically.
+4. Save both settings. Reading the key from the file works with or without `!`:
+   ```sh
+   gh variable set LAUNCHER_APP_ID -R jcar/jcar.github.io -b <app-id>
+   gh secret set LAUNCHER_APP_KEY -R jcar/jcar.github.io < ~/Downloads/<app-name>.*.private-key.pem
+   ```
+5. Run Build launcher and check the log shows `Found N Pages sites out of M repos` with M counting private repos. Then delete the `.pem` file and the old personal token (github.com/settings/personal-access-tokens) and remove the `LAUNCHER_TOKEN` secret.
+
+**If the App stops working** (key deleted, App uninstalled), Build launcher fails or private projects drop off the list. The site stays up either way. To fix it, generate a new private key and save it over `LAUNCHER_APP_KEY`, or reinstall the App.
+
+**Using a personal token instead:** create a fine-grained token (All repositories; Pages: Read-only) and save it as `LAUNCHER_TOKEN`. Run `gh secret set` in a regular terminal, because `!` in Claude Code can't answer the paste prompt and saves an empty secret. These tokens expire, and when one does, Build launcher fails with a 401.
 
 Cards for private repos leave out the GitHub link, since visitors would get a 404. The launcher page is public, so anything it lists (names, descriptions) is visible to anyone with the URL.
 

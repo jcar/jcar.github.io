@@ -25,11 +25,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # Mints a short-lived token from the Launchpad GitHub App, so there's no token to renew.
+      # Skipped until the LAUNCHER_APP_ID variable is set; then the personal token below is the fallback.
+      - name: Get GitHub App token
+        id: app
+        if: ${{ vars.LAUNCHER_APP_ID != '' }}
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.LAUNCHER_APP_ID }}
+          private-key: ${{ secrets.LAUNCHER_APP_KEY }}
+          owner: ${{ github.repository_owner }}
       - name: Collect Pages sites
         env:
           OWNER: ${{ github.repository_owner }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LAUNCHER_TOKEN: ${{ secrets.LAUNCHER_TOKEN }}   # optional, only needed to include private repos
+          # Needed to include private repos: the App token if set up, else the personal token.
+          LAUNCHER_TOKEN: ${{ steps.app.outputs.token || secrets.LAUNCHER_TOKEN }}
+          LAUNCHER_TOKEN_KIND: ${{ steps.app.outputs.token && 'app' || 'pat' }}
         run: node scripts/build-projects.mjs
       - name: Commit if changed
         run: |
