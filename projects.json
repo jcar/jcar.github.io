@@ -1,6 +1,6 @@
 {
   "owner": "jcar",
-  "generatedAt": "2026-10-11T14:45:37.905Z",
+  "generatedAt": "2026-10-11T15:28:03.591Z",
   "projects": [
     {
       "name": "alicorn-adventures",
@@ -8,7 +8,9 @@
       "description": "A gentle, non-competitive alicorn adventure game for young kids (Phaser 3)",
       "url": "https://jcar.github.io/alicorn-adventures/",
       "repoUrl": "https://github.com/jcar/alicorn-adventures",
-      "topics": [],
+      "topics": [
+        "game"
+      ],
       "icon": null,
       "language": "TypeScript",
       "private": false,
@@ -32,7 +34,9 @@
       "description": "Touch-first tournament bass fishing PWA for iPhone and iPad",
       "url": "https://jcar.github.io/black-bass/",
       "repoUrl": "https://github.com/jcar/black-bass",
-      "topics": [],
+      "topics": [
+        "game"
+      ],
       "icon": null,
       "language": "TypeScript",
       "private": false,
@@ -44,11 +48,13 @@
       "description": "Blue Marlin Sportfishing — a modern remake of Hot-B's NES The Blue Marlin, plus a Hemingway-style story mode. Touch-first PWA.",
       "url": "https://jcar.github.io/blue-marlin/",
       "repoUrl": "https://github.com/jcar/blue-marlin",
-      "topics": [],
+      "topics": [
+        "game"
+      ],
       "icon": null,
       "language": "TypeScript",
       "private": false,
-      "pushedAt": "2026-10-11T12:49:10Z"
+      "pushedAt": "2026-10-11T15:19:27Z"
     },
     {
       "name": "chess-adventure-quest",
@@ -56,7 +62,9 @@
       "description": "A kid-friendly browser-based chess learning game built with React and TypeScript",
       "url": "https://jcar.github.io/chess-adventure-quest/",
       "repoUrl": "https://github.com/jcar/chess-adventure-quest",
-      "topics": [],
+      "topics": [
+        "game"
+      ],
       "icon": null,
       "language": "TypeScript",
       "private": false,
@@ -176,7 +184,9 @@
       "description": "A kid-friendly Mad Max style combat racer (Rock n' Roll Racing for 6-year-olds)",
       "url": "https://jcar.github.io/wasteland-racers/",
       "repoUrl": "https://github.com/jcar/wasteland-racers",
-      "topics": [],
+      "topics": [
+        "game"
+      ],
       "icon": null,
       "language": "TypeScript",
       "private": false,
