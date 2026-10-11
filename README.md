@@ -147,7 +147,19 @@ gh api -X PUT repos/jcar/jcar.github.io/actions/permissions/workflow -f default_
 
 ## Private repos
 
-By default only public repos are listed. To include private repos that publish Pages, create a fine-grained token with read access to Metadata and Pages, and save it as an Actions secret named `LAUNCHER_TOKEN`. The launcher page is public, so anything it lists is visible to anyone with the URL.
+My project repos are private, but their Pages sites are public. That takes **GitHub Pro**: on the free plan, making a repo private takes its site down.
+
+The default Actions token only sees public repos, so the launcher reads them with a fine-grained token saved as the Actions secret `LAUNCHER_TOKEN`:
+
+- **Resource owner:** jcar. **Repository access:** All repositories.
+- **Permissions:** Pages: Read-only (Metadata: Read-only is added automatically).
+- Save it with `gh secret set LAUNCHER_TOKEN -R jcar/jcar.github.io` and paste the token when prompted.
+
+**When the token expires,** Build launcher fails with a 401. The site stays up with the last list, but new projects won't appear. Make a new token and save it over the old secret.
+
+Cards for private repos leave out the GitHub link, since visitors would get a 404. The launcher page is public, so anything it lists (names, descriptions) is visible to anyone with the URL.
+
+To make a project private: `gh repo edit jcar/<repo> --visibility private --accept-visibility-change-consequences`. Stars and watchers are erased. Its Pages builds then count against the account's Actions minutes.
 
 ## Using the page
 
