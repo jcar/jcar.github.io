@@ -159,7 +159,7 @@ The default Actions token only sees public repos, so the launcher reads them wit
 
 Cards for private repos leave out the GitHub link, since visitors would get a 404. The launcher page is public, so anything it lists (names, descriptions) is visible to anyone with the URL.
 
-To make a project private: `gh repo edit jcar/<repo> --visibility private --accept-visibility-change-consequences`. Stars and watchers are erased. Its Pages builds then count against the account's Actions minutes.
+To make a project private: `gh api -X PATCH repos/jcar/<repo> -f visibility=private`. Stars and watchers are erased. Its Pages builds then count against the account's Actions minutes.
 
 ## Using the page
 
